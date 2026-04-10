@@ -1,39 +1,52 @@
-name: CI
+name: Node.js CI (project name)
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  quality-check:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [18.x, 20.x]
 
     steps:
-      - name: Checkout
+      - name: Code Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Node.js setup ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install
+      - name: Clean dependency install
         run: npm ci
 
-      - name: Lint
+      - name: Security auditing
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Format check (Prettier)
+        run: npm run format:check
+
+      - name: Check standard (Lint)
         run: npm run lint
 
-      - name: Type Check
+      - name: Type check (TypeScript)
         run: npm run type-check
 
-      - name: Test
+      - name: Run Tests
         run: npm test
+        env:
+          NODE_ENV: test
 
-      - name: Build
+      - name: Build Check
         run: npm run build

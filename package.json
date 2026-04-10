@@ -4,20 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "jest",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "jest",
     "build": "tsc",
     "type-check": "tsc --noEmit",
     "prepare": "husky"
   },
-  "lint-staged": {
-  "*.{ts,js}": [
-    "eslint --fix",
-    "prettier --write"
-  ]
-},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jonas-kio/CI-Base-Project.git"
@@ -33,7 +27,11 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
     "eslint": "^10.2.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
     "jest": "^30.3.0",

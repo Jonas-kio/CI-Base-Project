@@ -1,0 +1,230 @@
+
+BITÁCORA DE PREPARACIÓN 
+Proyecto  : ci-base-project
+Tecnología: Node.js + TypeScript
+
+ REQUERIMIENTOS
+
+stack tecnológico:
+
+  - Runtime:    Node.js (LTS, gestionado via NVM)
+  - Lenguaje:   TypeScript (para tipado estático y mejor mantenibilidad)
+  - Linting:    ESLint + @typescript-eslint
+  - Formato:    Prettier
+  - Git Hooks:  Husky + lint-staged
+  - Testing:    Jest (TDD)
+  - CI/CD:      GitHub Actions (.github/workflows/ci.yml)
+
+ACCIÓN: Iniciar la creación de la estructura.
+
+ESTRUCTURA DE DIRECTORIOS
+ Paso 1
+
+Se crea la estructura base del proyecto:
+
+  ci-base-project/
+  ├── .github/workflows/    → Pipeline de GitHub Actions
+  ├── .husky/               → Git hooks gestionados por Husky
+  ├── src/                  → Código fuente TypeScript
+  └── tests/                → Pruebas unitarias con Jest
+
+
+  git init
+  nvm install --lts
+  nvm use --lts
+  npm init -y
+
+PACKAGE.JSON
+ Paso 2
+
+Se configura el package.json con las dependencias de desarrollo requeridas:
+
+  Dependencias instaladas (devDependencies):
+  - eslint@^10                     → Motor de linting
+  - @typescript-eslint/parser     → Parser TypeScript para ESLint
+  - @typescript-eslint/eslint-plugin → Reglas TypeScript
+  - eslint-plugin-import          → Orden de imports
+  - eslint-config-prettier        → Desactiva reglas ESLint que conflictúan con Prettier
+  - eslint-plugin-prettier        → Prettier como regla de ESLint
+  - prettier@^3                   → Formateador de código
+  - husky@^9                      → Gestor de Git hooks
+  - lint-staged@^16               → Ejecuta linters solo sobre archivos staged
+  - jest@^30                      → Framework de testing
+  - ts-jest@^29                   → Adaptador Jest para TypeScript
+  - typescript@^6                 → Compilador TypeScript
+  - @types/jest                   → Tipos TypeScript para Jest
+
+  Scripts definidos:
+  - "test"          → jest
+  - "lint"          → eslint .
+  - "format"        → prettier --write .
+  - "format:check"  → prettier --check .
+  - "build"         → tsc
+  - "type-check"    → tsc --noEmit
+  - "prepare"       → husky
+
+  Sección lint-staged configurada para *.{ts,js}:
+  - eslint --fix
+  - prettier --write
+
+RESULTADO: package.json 
+
+ CONFIGURACIÓN TYPESCRIPT (tsconfig.json)
+Paso 3
+
+Se crea tsconfig.json con configuración estricta:
+
+  - module: commonjs         → Compatibilidad Node.js
+  - target: esnext           → Sintaxis moderna compatible con Node 18+
+  - moduleResolution: node   → Resolución de módulos estándar de Node
+  - lib: ["esnext"]         → Tipos de APIs modernas
+  - types: ["jest"]         → Tipos de Jest para pruebas
+  - strict: true             → Habilita todas las verificaciones estrictas
+  - isolatedModules: true    → Validación por módulo
+  - skipLibCheck: true       → Acelera compilación ignorando chek de libs
+
+RESULTADO: tsconfig.json creado.
+
+CONFIGURACIÓN PRETTIER (.prettierrc)
+ Paso 4
+
+Se crea .prettierrc con los valores exactos del documento de referencia:
+
+  {
+    "printWidth": 90,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "bracketSameLine": false
+  }
+
+RESULTADO: .prettierrc creado sin modificaciones respecto al documento base.
+
+ CONFIGURACIÓN ESLINT (.eslintrc.json)
+Paso 5
+
+
+Se crea .eslintrc.json.
+
+  Parser    : @typescript-eslint/parser
+  Plugins   : @typescript-eslint, import, prettier
+  Extends   : eslint:recommended, plugin:@typescript-eslint/recommended,
+              plugin:@typescript-eslint/recommended-requiring-type-checking,
+              prettier
+
+  Reglas clave habilitadas:
+  - @typescript-eslint/no-explicit-any: "error"
+  - @typescript-eslint/no-unused-vars: ["warn", { "argsIgnorePattern": "^_" }]
+  - @typescript-eslint/explicit-function-return-type: "off"
+  - @typescript-eslint/no-floating-promises: "error"
+  - @typescript-eslint/no-misused-promises: "error"
+  - @typescript-eslint/await-thenable: "error"
+  - no-console: ["warn", { "allow": ["warn", "error"] }]
+  - import/order: "error"
+  - prettier/prettier: "error"
+
+RESULTADO: .eslintrc.json creado.
+ CONFIGURACIÓN JEST (jest.config.cjs)
+Paso 6
+Se crea jest.config.cjs:
+
+  - preset: 'ts-jest'
+  - testEnvironment: 'node'
+  - collectCoverage: true
+  - coverageDirectory: 'coverage'
+
+RESULTADO: jest.config.cjs creado. 
+
+ GIT HOOKS CON HUSKY
+ Paso 7
+Se crean los hooks de Husky manualmente:
+
+  .husky/pre-commit:
+  → Ejecuta: npx lint-staged
+  → Propósito: Antes de cada commit, aplica ESLint y Prettier SOLO sobre
+    los archivos que están en el área de staging.
+
+  .husky/pre-push:
+  → Ejecuta: npm test
+  → Propósito: Antes de hacer push, ejecuta TODOS los tests.
+
+RESULTADO: Hooks creados. 
+
+FLUJO DEL DESARROLLADOR:
+  1. git add <archivos>
+  2. git commit → [pre-commit] lint-staged
+  3. git push   → [pre-push] npm test
+
+
+GITHUB ACTIONS CI PIPELINE (.github/workflows/ci.yml)
+Paso 8
+
+Se crea el pipeline de CI con los pasos del documento de referencia.
+
+  Triggers:
+  - push a: main, develop
+  - pull_request a: main, develop
+
+  Matrix Strategy:
+  - node-version: [18.x, 20.x]
+
+  Pasos del pipeline:
+  1. actions/checkout@v4
+  2. actions/setup-node@v4
+  3. npm ci
+  4. npm audit --audit-level=high
+  5. npm run format:check
+  6. npm run lint
+  7. npm run type-check
+  8. npm test
+  9. npm run build
+
+RESULTADO: ci.yml creado.
+
+CÓDIGO DE EJEMPLO Y TESTS (TDD)
+
+Se crea código de ejemplo para validar la configuración.
+
+RESULTADO: Código de ejemplo listo para demostrar el flujo TDD.
+
+
+ARCHIVOS DE SOPORTE
+Paso 10
+
+Se crean archivos adicionales:
+
+  .gitignore → Excluye: node_modules/, dist/, coverage/, .env, *.log
+  .prettierrc → Configuración de formato
+  .eslintrc.json → Reglas ESLint TypeScript
+  .husky/ → Hooks de Git
+  README.md → Documentación del proyecto
+
+RESULTADO: Proyecto completo y documentado.
+
+RESUMEN FINAL 
+
+ESTRUCTURA FINAL DEL PROYECTO:
+  ci-base-project/
+  ├── .github/
+  │   └── workflows/
+  │       └── ci.yml
+  ├── .husky/
+  │   ├── pre-commit
+  │   └── pre-push
+  ├── src/
+  ├── tests/
+  ├── .eslintrc.json
+  ├── .gitignore
+  ├── .prettierrc
+  ├── jest.config.cjs
+  ├── package.json
+  ├── README.md
+  └── tsconfig.json
+
+FIN DE BITÁCORA
+
