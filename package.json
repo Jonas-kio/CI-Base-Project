@@ -1,0 +1,46 @@
+{
+  "name": "ci-base-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "jest",
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+  "*.{ts,js}": [
+    "eslint --fix",
+    "prettier --write"
+  ]
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonas-kio/CI-Base-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jonas-kio/CI-Base-Project/issues"
+  },
+  "homepage": "https://github.com/Jonas-kio/CI-Base-Project#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "eslint": "^10.2.0",
+    "globals": "^17.4.0",
+    "husky": "^9.1.7",
+    "jest": "^30.3.0",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.2",
+    "ts-jest": "^29.4.9",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1"
+  }
+}
