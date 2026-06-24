@@ -1,7 +1,5 @@
 # CI-Base-Project
 
-
-
 ## Comenzando
 
 1. Instalar dependencias:
@@ -45,5 +43,3 @@ El repositorio ignora:
 - `coverage/`
 - `dist/`
 - `.env`
-
-

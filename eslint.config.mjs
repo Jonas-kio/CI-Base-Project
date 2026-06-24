@@ -15,8 +15,8 @@ export default defineConfig([
       'tests/*.js',
       'tests/*.js.map',
       'tests/*.d.ts',
-      'jest.config.cjs'
-    ]
+      'jest.config.cjs',
+    ],
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
@@ -26,9 +26,9 @@ export default defineConfig([
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.jest
-      }
-    }
+        ...globals.jest,
+      },
+    },
   },
   tseslint.configs.recommended,
 ]);
